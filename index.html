@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voyage | AI Travel Exploration</title>
+  <meta name="description" content="Discover your next journey with Voyage's hyper-personalized AI travel engine.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- App Container for SPA -->
+  <main id="app">
+
+    <!-- ================= AUTH VIEW ================= -->
+    <section id="auth-view" class="view active">
+      <div class="auth-background" style="background-image: url('https://images.unsplash.com/photo-1549388929-7bc75aca5b96?crop=entropy&cs=srgb&fm=jpg&q=85');"></div>
+      <div class="auth-overlay"></div>
+      <div class="auth-card glass-panel">
+        <h1 class="brand-title">Voyage</h1>
+        <p class="subtitle">Where to next?</p>
+
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form">
+          <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="explorer@voyage.ai" required>
+          </div>
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="••••••••" required>
+          </div>
+          <div id="auth-error" class="hidden" style="color: var(--primary); margin-bottom: 1rem; font-size: 0.9rem;"></div>
+          <button type="submit" class="btn primary-btn w-100">Continue Journey</button>
+          <div class="auth-links">
+            <a href="#" id="forgot-password-link">Forgot Password?</a>
+            <a href="#" id="show-signup-link">Create Account</a>
+          </div>
+        </form>
+
+        <!-- Forgot Password Form (Hidden by default) -->
+        <form id="forgot-form" class="auth-form hidden">
+          <p class="form-desc">Enter your email to reset your password.</p>
+          <div class="input-group">
+            <label for="reset-email">Email</label>
+            <input type="email" id="reset-email" placeholder="explorer@voyage.ai" required>
+          </div>
+          <button type="submit" class="btn primary-btn w-100">Reset Password</button>
+          <div class="auth-links">
+            <a href="#" id="back-to-login-link">Back to Login</a>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================= TUTORIAL VIEW ================= -->
+    <section id="tutorial-view" class="view">
+      <div class="carousel-container" id="tutorial-carousel">
+        <!-- Slides injected via JS -->
+      </div>
+      <div class="carousel-controls">
+        <div class="dots" id="tutorial-dots"></div>
+        <button id="next-slide-btn" class="btn primary-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- ================= INTENT CAPTURE VIEW ================= -->
+    <section id="intent-view" class="view">
+      <header class="app-header">
+        <h2 class="brand-title small">Voyage</h2>
+        <div style="display: flex; gap: 1rem;">
+          <button id="logout-btn" class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: rgba(255,255,255,0.1); color: white;">Log Out</button>
+          <button id="profile-btn" class="icon-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </button>
+        </div>
+      </header>
+      
+      <div class="intent-container">
+        <h1 class="intent-title">Customize Your Journey</h1>
+        
+        <form id="intent-form">
+
+          <!-- VIBE CHIPS -->
+          <div class="vibe-selection">
+            <label class="section-label">🌍 Where's Your Vibe?</label>
+            <div class="vibe-chips" id="vibe-chips">
+              <button type="button" class="chip active" data-vibe="mountain">🏔️ Mountain</button>
+              <button type="button" class="chip" data-vibe="beach">🏖️ Beach</button>
+              <button type="button" class="chip" data-vibe="city">🌆 City</button>
+              <button type="button" class="chip" data-vibe="culture">🏛️ Culture</button>
+              <button type="button" class="chip" data-vibe="nature">🌲 Nature</button>
+            </div>
+          </div>
+
+          <!-- DEPARTURE REGION -->
+          <div class="question-block">
+            <h3 class="question-title">Where are you departing from?</h3>
+            <select id="origin-state" class="pill" style="width: 100%; text-align: left; padding: 1.2rem; appearance: auto;">
+              <option value="Andhra Pradesh">Andhra Pradesh</option>
+              <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+              <option value="Assam">Assam</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Chhattisgarh">Chhattisgarh</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Goa">Goa</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Haryana">Haryana</option>
+              <option value="Himachal Pradesh">Himachal Pradesh</option>
+              <option value="Jharkhand">Jharkhand</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Kerala">Kerala</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Manipur">Manipur</option>
+              <option value="Meghalaya">Meghalaya</option>
+              <option value="Mizoram">Mizoram</option>
+              <option value="Nagaland">Nagaland</option>
+              <option value="Odisha">Odisha</option>
+              <option value="Punjab">Punjab</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Sikkim">Sikkim</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Telangana">Telangana</option>
+              <option value="Tripura">Tripura</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Uttarakhand">Uttarakhand</option>
+              <option value="West Bengal">West Bengal</option>
+              <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+              <option value="Ladakh">Ladakh</option>
+              <option value="Andaman and Nicobar">Andaman and Nicobar</option>
+              <option value="Puducherry">Puducherry</option>
+            </select>
+            <input type="hidden" id="origin-region" value="India">
+          </div>
+
+          <!-- WHO'S GOING -->
+          <div class="question-block">
+            <h3 class="question-title">Who's joining the adventure?</h3>
+            <div class="pill-group" id="group-type">
+              <button type="button" class="pill active" data-group="solo">🙋 Solo</button>
+              <button type="button" class="pill" data-group="couple">💑 Couple</button>
+              <button type="button" class="pill" data-group="friends">👯 Friends</button>
+              <button type="button" class="pill" data-group="family">👨‍👩‍👧 Family</button>
+            </div>
+          </div>
+
+          <!-- SLIDERS -->
+          <div class="sliders-container">
+            <!-- ENERGY SLIDER -->
+            <div class="slider-group">
+              <label class="section-label">⚡ Activity Level</label>
+              <div class="slider-labels">
+                <span>🧘 Relaxed</span>
+                <span>⚖️ Moderate</span>
+                <span>🔥 High</span>
+              </div>
+              <input type="range" id="vibe-energy" min="0" max="2" step="1" value="1">
+            </div>
+
+            <!-- BUDGET SLIDER -->
+            <div class="slider-group">
+              <label class="section-label">💰 Budget Level</label>
+              <div class="slider-labels">
+                <span>💸 Budget</span>
+                <span>🎒 Mid-Range</span>
+                <span>💎 Luxury</span>
+              </div>
+              <input type="range" id="vibe-budget" min="0" max="2" step="1" value="1">
+            </div>
+          </div>
+
+          <!-- DURATION PILLS -->
+          <div class="question-block">
+            <label class="section-label">📅 Trip Length</label>
+            <div class="pill-group" id="duration-pills">
+              <button type="button" class="pill" data-days="3">🏃 Weekend<span class="pill-sub">2–3 days</span></button>
+              <button type="button" class="pill active" data-days="7">✈️ Week Away<span class="pill-sub">5–7 days</span></button>
+              <button type="button" class="pill" data-days="14">🌴 Extended<span class="pill-sub">10–14 days</span></button>
+            </div>
+            <input type="hidden" id="trip-duration" value="7">
+          </div>
+
+          <button type="submit" class="btn primary-btn w-100 generate-btn">
+            <span class="btn-text">✨ Discover My Trip</span>
+            <span class="loader hidden"></span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================= RESULTS / ITINERARY VIEW ================= -->
+    <section id="results-view" class="view">
+      <header class="app-header transparent">
+        <button id="back-to-intent-btn" class="icon-btn back-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path></svg>
+        </button>
+      </header>
+
+      <div class="destination-feed" id="destination-feed">
+        <!-- Results injected via JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
