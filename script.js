@@ -56,6 +56,81 @@ document.addEventListener('DOMContentLoaded', () => {
       showView('auth');
     });
   }
+
+  // --- Saved Journeys Flow ---
+  const myJourneysBtn = document.getElementById('my-journeys-btn');
+  const savedModal = document.getElementById('saved-journeys-modal');
+  const closeSavedModal = document.getElementById('close-saved-modal');
+  const savedList = document.getElementById('saved-journeys-list');
+
+  if (myJourneysBtn) {
+    myJourneysBtn.addEventListener('click', () => {
+      // Fetch from local storage
+      const saved = JSON.parse(localStorage.getItem('savedJourneys') || '[]');
+      
+      savedList.innerHTML = saved.length === 0 ? 
+        `<p style="color: #636e72; font-size: 1.1rem; grid-column: 1/-1;">You haven't saved any journeys yet. Start exploring!</p>` : 
+        saved.map((journey, idx) => `
+          <div class="saved-journey-card" data-idx="${idx}">
+            <img src="${journey.image}" class="saved-img" alt="${journey.destination}">
+            <div class="saved-info">
+              <div class="saved-title">${journey.destination.split(',')[0]}</div>
+              <div class="saved-date">Saved on ${journey.dateSaved}</div>
+            </div>
+          </div>
+        `).join('');
+
+      // Add click listeners to open the AI modal with saved data
+      savedList.querySelectorAll('.saved-journey-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const idx = card.getAttribute('data-idx');
+          const journey = saved[idx];
+          
+          const modal = document.getElementById('ai-modal');
+          const modalBody = document.getElementById('modal-body');
+          
+          modalBody.innerHTML = `
+            <div class="reasoning-card" style="margin-top: 0; padding: 0; border: none; box-shadow: none;">
+              <div class="r-title">🌟 Your saved trip to ${journey.destination.split(',')[0]}</div>
+              
+              <div class="itinerary-grid" style="margin-top: 2rem;">
+                <div class="others-title">📅 Journey Itinerary</div>
+                ${journey.plan.itinerary.map(day => `
+                  <div class="itinerary-day">
+                    <span class="day-tag">Day ${day.day}</span>
+                    <div class="day-title">${day.title}</div>
+                    <div class="day-desc">${day.desc}</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+          
+          savedModal.classList.remove('active');
+          modal.classList.add('active');
+        });
+      });
+
+      savedModal.classList.add('active');
+    });
+  }
+
+  if (closeSavedModal) {
+    closeSavedModal.addEventListener('click', () => savedModal.classList.remove('active'));
+    savedModal.addEventListener('click', (e) => {
+      if (e.target === savedModal) savedModal.classList.remove('active');
+    });
+  }
+
+  // --- AI Modal Global Close Logic ---
+  const aiModal = document.getElementById('ai-modal');
+  const closeAiModal = document.getElementById('close-modal');
+  if (closeAiModal) {
+    closeAiModal.addEventListener('click', () => aiModal.classList.remove('active'));
+    aiModal.addEventListener('click', (e) => {
+      if (e.target === aiModal) aiModal.classList.remove('active');
+    });
+  }
   
   let isSignup = false;
 
@@ -374,8 +449,6 @@ document.addEventListener('DOMContentLoaded', () => {
               <button class="lock-btn gen-plan-btn" data-dest-id="${dest.id}">
                 Lock this trip →
               </button>
-              
-              <div id="ai-container-${dest.id}" class="ai-section"></div>
             </div>
           </div>
         `;
@@ -384,16 +457,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add Event Listener to the new button
         const genBtn = card.querySelector('.gen-plan-btn');
         genBtn.addEventListener('click', async () => {
-          const container = document.getElementById(`ai-container-${dest.id}`);
-          genBtn.style.display = 'none'; // Hide the button once clicked
+          genBtn.innerHTML = '<div class="loader" style="margin: 0 auto; width: 20px; height: 20px;"></div>';
+          genBtn.style.opacity = '0.8';
+          genBtn.style.pointerEvents = 'none';
           
-          container.innerHTML = `
-            <div class="reasoning-card">
-              <div class="r-title">✨ Thinking like a local...</div>
-              <div class="loader" style="margin: 0 auto;"></div>
-            </div>
-          `;
-
           const finalPrompt = `The user is planning a trip for a ${activeGroup} with a ${activeVibe} vibe. 
           Preferences: Activity level ${energyVal}/100, Budget level ${budgetVal}/100.
           Why is ${dest.name} a perfect match for this ${activeGroup} trip? 
@@ -424,9 +491,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
             const plan = JSON.parse(data.choices[0].message.content);
 
-            container.innerHTML = `
-              <div class="reasoning-card">
-                <div class="r-title">🌟 Why this wins</div>
+            const modal = document.getElementById('ai-modal');
+            const modalBody = document.getElementById('modal-body');
+            const closeBtn = document.getElementById('close-modal');
+
+            // Populate Modal Content
+            modalBody.innerHTML = `
+              <div class="reasoning-card" style="margin-top: 0; padding: 0; border: none; box-shadow: none;">
+                <div class="r-title">🌟 Why ${dest.name.split(',')[0]} wins</div>
                 <ul class="r-list">
                   ${plan.why_this_wins.map(point => `
                     <li class="r-item">
@@ -457,15 +529,50 @@ document.addEventListener('DOMContentLoaded', () => {
                   `).join('')}
                 </div>
                 
-                <button class="lock-btn" style="margin-top: 2rem; background: #2d3436;">
+                <button class="lock-btn save-journey-btn" style="margin-top: 2rem; background: #2d3436;">
                   Save this Journey
                 </button>
               </div>
             `;
-          } catch (err) {
+            
+            // Replace button to drop old event listener
+            const viewBtn = document.createElement('button');
+            viewBtn.className = 'lock-btn';
+            viewBtn.innerHTML = 'View AI Plan';
+            viewBtn.style.background = '#00b894';
+            viewBtn.onclick = () => modal.classList.add('active');
+            genBtn.replaceWith(viewBtn);
+
+            // Show Modal
+            modal.classList.add('active');
+
+            // Setup Save Button Logic
+            const saveBtn = modalBody.querySelector('.save-journey-btn');
+            saveBtn.onclick = () => {
+              // Get existing saved journeys or initialize empty array
+              const saved = JSON.parse(localStorage.getItem('savedJourneys') || '[]');
+              
+              // Add this new journey
+              saved.push({
+                destination: dest.name,
+                image: randomImg,
+                dateSaved: new Date().toLocaleDateString(),
+                plan: plan
+              });
+              
+              // Save back to browser storage
+              localStorage.setItem('savedJourneys', JSON.stringify(saved));
+              
+              // Visual confirmation
+              saveBtn.innerHTML = '✓ Saved to your Journeys';
+              saveBtn.style.background = '#00b894';
+              saveBtn.style.pointerEvents = 'none';
+            };
+            } catch (err) {
             console.error("AI Error:", err);
-            container.innerHTML = `<p style="color: var(--primary)">Error generating plan. Please try again.</p>`;
-            genBtn.style.display = 'block';
+            genBtn.innerHTML = 'Error. Try again';
+            genBtn.style.opacity = '1';
+            genBtn.style.pointerEvents = 'auto';
           }
         });
 

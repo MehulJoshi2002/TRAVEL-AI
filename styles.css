@@ -535,9 +535,19 @@ input[type=range]::-webkit-slider-runnable-track {
   border-radius: 32px;
   width: 100%;
   max-width: 500px;
-  overflow: hidden;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 40px 100px rgba(0,0,0,0.5);
   animation: cardFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hide scrollbar for cleaner look */
+.content-wrapper::-webkit-scrollbar {
+  display: none;
+}
+.content-wrapper {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 @keyframes cardFadeIn {
@@ -769,75 +779,112 @@ input[type=range]::-webkit-slider-runnable-track {
   color: white;
 }
 
-:root {
-  --primary-rgb: 255, 68, 68;
+/* ================= MODAL STYLING ================= */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
-#results-view {
-  background: #0f172a; /* Dark sleek background for the feed */
-  min-height: 100vh;
-  padding-top: 80px;
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-#destination-feed {
-  padding-bottom: 5rem;
+.modal-content {
+  background: #f9fdfc;
+  width: 90%;
+  max-width: 600px;
+  max-height: 85vh;
+  border-radius: 32px;
+  padding: 2.5rem;
+  position: relative;
+  overflow-y: auto;
+  transform: translateY(30px);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.3);
 }
 
-/* Removing old metrics since we redesigned the card */
-.old-metrics {
+.modal-content::-webkit-scrollbar {
   display: none;
 }
-.metric-item {
+.modal-content {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.modal-overlay.active .modal-content {
+  transform: translateY(0);
+}
+
+.close-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: #f1f2f6;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
   display: flex;
-  flex-direction: column;
-}
-.metric-label {
-  font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;
-}
-.metric-value {
-  font-size: 1.5rem; font-weight: 600;
+  align-items: center;
+  justify-content: center;
+  color: #2d3436;
+  transition: background 0.2s;
+  z-index: 100;
 }
 
-.itinerary-container {
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
+.close-btn:hover {
+  background: #dfe4ea;
+}
+
+/* Saved Journeys Grid */
+.saved-journey-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #f1f2f6;
+}
+
+.saved-journey-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,184,148,0.1);
+  border-color: #00b894;
+}
+
+.saved-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.saved-info {
   padding: 1.5rem;
-  margin-top: 1rem;
 }
 
-.itinerary-title {
+.saved-title {
   font-size: 1.2rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid var(--glass-border);
-  padding-bottom: 0.5rem;
+  font-weight: 800;
+  color: #2d3436;
+  margin-bottom: 0.5rem;
 }
 
-.itinerary-day {
-  margin-bottom: 1rem;
-}
-.itinerary-day:last-child { margin-bottom: 0; }
-
-.day-header {
-  font-weight: 600;
-  color: var(--primary);
-  margin-bottom: 4px;
+.saved-date {
   font-size: 0.9rem;
-}
-
-.day-title {
-  font-weight: 600;
-  margin-bottom: 2px;
-}
-.day-desc {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-@keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  color: #95a5a6;
 }
 
 /* ================= MEDIA QUERIES ================= */

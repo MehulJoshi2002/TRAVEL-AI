@@ -12,6 +12,25 @@
 </head>
 <body>
 
+  <!-- AI Itinerary Modal -->
+  <div id="ai-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button id="close-modal" class="close-btn">&times;</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Saved Journeys Modal -->
+  <div id="saved-journeys-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 800px;">
+      <button id="close-saved-modal" class="close-btn">&times;</button>
+      <h2 style="font-weight: 800; font-size: 1.8rem; margin-bottom: 2rem;">My Saved Journeys</h2>
+      <div id="saved-journeys-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
   <!-- App Container for SPA -->
   <main id="app">
 
@@ -72,6 +91,7 @@
       <header class="app-header">
         <h2 class="brand-title small">Voyage</h2>
         <div style="display: flex; gap: 1rem;">
+          <button id="my-journeys-btn" class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: rgba(0, 184, 148, 0.2); color: #00b894; border: 1px solid #00b894;">My Journeys</button>
           <button id="logout-btn" class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: rgba(255,255,255,0.1); color: white;">Log Out</button>
           <button id="profile-btn" class="icon-btn">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
